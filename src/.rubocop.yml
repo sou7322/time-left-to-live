@@ -1,0 +1,18 @@
+inherit_from: .rubocop_todo.yml
+
+require: rubocop-rails
+
+AllCops:
+  Exclude:
+    - 'db/**/*'
+    - 'config/++/+'
+    - 'script/**/*'
+    - 'bin/{rails,rake}'
+    - 'bin/**/*'
+    - 'spec/**/*'
+    - !ruby/regexp /old_and_unused\.rb$/
+  TargetRubyVersion: 3.1
+  TargetRailsVersion: 7.0
+
+Rails:
+  Enabled: true
