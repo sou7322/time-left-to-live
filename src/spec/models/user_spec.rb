@@ -6,9 +6,9 @@ RSpec.describe User, type: :model do
   end
 
   describe "バリデーション" do
-    describe "ユーザー名" do
+    describe "nameザー名" do
       context "正常系" do
-        context "ユーザー名が1文字の場合" do
+        context "nameの場合" do
           it "validになること" do
             valid_name = "a" * 1
 
@@ -20,7 +20,7 @@ RSpec.describe User, type: :model do
           end
         end
 
-        context "ユーザー名が5文字の場合" do
+        context "nameの場合" do
           it "validになること" do
             valid_name = "a" * 5
 
@@ -32,7 +32,7 @@ RSpec.describe User, type: :model do
           end
         end
 
-        context "ユーザー名が20文字の場合" do
+        context "nameの場合" do
           it "validになること" do
             valid_name = "a" * 20
 
@@ -44,7 +44,7 @@ RSpec.describe User, type: :model do
           end
         end
 
-        context "重複しないユーザー名の場合" do
+        context "重複しないnameの場合" do
           it "validになること" do
             other_user = create(:user, name: "user")
 
@@ -58,7 +58,7 @@ RSpec.describe User, type: :model do
       end
 
       context "異常系" do
-        context "ユーザー名が0文字の場合" do
+        context "nameの場合" do
           it "invalidになること" do
             invalid_user = build(:user, name: nil)
             invalid_user.valid?
@@ -68,7 +68,7 @@ RSpec.describe User, type: :model do
           end
         end
 
-        context "ユーザー名が21文字の場合" do
+        context "nameの場合" do
           it "invalidになること" do
             invalid_name = "a" * 21
 
@@ -80,7 +80,7 @@ RSpec.describe User, type: :model do
           end
         end
 
-        context "重複したユーザー名の場合" do
+        context "重複したnameの場合" do
           it "invalidになること" do
             other_user = create(:user, name: "user")
 
@@ -89,6 +89,102 @@ RSpec.describe User, type: :model do
 
             expect(duplicate_user).to be_invalid
             expect(duplicate_user.errors[:name]).to include "はすでに存在します" 
+          end
+        end
+      end
+    end
+
+    describe "lifespan" do
+      context "正常系" do
+        context "lifespanの値が1の場合" do
+          it "validになること" do
+            valid_user = build(:user, lifespan: 1)
+            valid_user.valid?
+
+            expect(valid_user).to be_valid
+            expect(valid_user.errors).to be_empty
+          end
+        end
+
+        context "lifespanの値が30の場合" do
+          it "validになること" do
+            valid_user = build(:user, lifespan: 30)
+            valid_user.valid?
+
+            expect(valid_user).to be_valid
+            expect(valid_user.errors).to be_empty
+          end
+        end
+
+        context "lifespanの値が100の場合" do
+          it "validになること" do
+            valid_user = build(:user, lifespan: 100)
+            valid_user.valid?
+
+            expect(valid_user).to be_valid
+            expect(valid_user.errors).to be_empty
+          end
+        end
+      end
+  
+      context "異常系" do
+        context "lifespanの値が空の場合" do
+          it "invalidになること" do
+            invalid_user = build(:user, lifespan: nil)
+            invalid_user.valid?
+
+            expect(invalid_user).to be_invalid
+            expect(invalid_user.errors[:lifespan]).to include "を入力してください" 
+          end
+        end
+
+        context "lifespanの値が文字列の場合" do
+          it "invalidになること" do
+            invalid_user = build(:user, lifespan: "string")
+            invalid_user.valid?
+
+            expect(invalid_user).to be_invalid
+            expect(invalid_user.errors[:lifespan]).to include "は数値で入力してください" 
+          end
+        end
+
+        context "lifespanの値が少数の場合" do
+          it "invalidになること" do
+            invalid_user = build(:user, lifespan: 10.5)
+            invalid_user.valid?
+
+            expect(invalid_user).to be_invalid
+            expect(invalid_user.errors[:lifespan]).to include "は整数で入力してください" 
+          end
+        end
+
+        context "lifespanの値が負の値の場合" do
+          it "invalidになること" do
+            invalid_user = build(:user, lifespan: -1)
+            invalid_user.valid?
+
+            expect(invalid_user).to be_invalid
+            expect(invalid_user.errors[:lifespan]).to include "は1以上の値にしてください" 
+          end
+        end
+
+        context "lifespanの値が0の場合" do
+          it "invalidになること" do
+            invalid_user = build(:user, lifespan: 0)
+            invalid_user.valid?
+
+            expect(invalid_user).to be_invalid
+            expect(invalid_user.errors[:lifespan]).to include "は1以上の値にしてください" 
+          end
+        end
+
+        context "lifespanの値が101の場合" do
+          it "invalidになること" do
+            invalid_user = build(:user, lifespan: 101)
+            invalid_user.valid?
+
+            expect(invalid_user).to be_invalid
+            expect(invalid_user.errors[:lifespan]).to include "は100以下の値にしてください" 
           end
         end
       end
