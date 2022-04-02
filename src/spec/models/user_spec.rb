@@ -190,6 +190,57 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+
+  describe "インスタンスメソッド" do
+    describe "#calc_death_anniversary" do
+      before do
+        travel_to Time.zone.local(2000, 1, 1)
+      end
+
+      context "正常系" do
+        context "lifespanの値が1の場合" do
+          it "death_anniversaryが2001年1月1日になること" do
+            valid_user = build(:user, lifespan: 1)
+            valid_user.calc_death_anniversary
+
+            expect(valid_user.death_anniversary).to eq "1-1-2001".to_date
+          end
+        end
+
+        context "lifespanの値が100の場合" do
+          it "death_anniversaryが2100年1月1日になること" do
+            valid_user = build(:user, lifespan: 100)
+            valid_user.calc_death_anniversary
+
+            expect(valid_user.death_anniversary).to eq "1-1-2100".to_date
+          end
+        end
+      end
+    end
+
+    describe "#calc_remaining_hours" do
+      context "正常系" do
+        context "lifespanの値が1の場合" do
+          it "計算結果が6_025時間になること" do
+            valid_user = build(:user, lifespan: 1)
+            remaining_hours = valid_user.calc_remaining_hours
+
+            expect(remaining_hours).to eq 6_025
+          end
+        end
+
+        context "lifespanの値が30の場合" do
+          it "計算結果が186_150時間になること" do
+            valid_user = build(:user, lifespan: 30)
+            remaining_hours = valid_user.calc_remaining_hours
+
+            expect(remaining_hours).to eq 186_150
+          end
+        end
+      end
+    end
+  end
 end
 
 # == Schema Information
